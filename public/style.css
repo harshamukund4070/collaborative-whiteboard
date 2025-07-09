@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+canvas {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  border: 2px solid #000;
+  background-color: white;
+}
+
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 50px;
+  width: 100%;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  gap: 10px;
+  border-bottom: 2px solid #000;
+}
+
+button {
+  padding: 5px 10px;
+  border: none;
+  background: #333;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #555;
+}
