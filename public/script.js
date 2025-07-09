@@ -1,16 +1,21 @@
+// Get canvas and context
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 
+// Set canvas size (adjusts for toolbar height)
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight - 50;
 
+// Tool variables
 let drawing = false;
 let currentTool = 'pen';
 let color = document.getElementById("colorPicker").value;
 let thickness = document.getElementById("thickness").value;
 
+// WebSocket connection to the server
 const socket = new WebSocket(`wss://${window.location.host}`);
 
+// Mouse position and drawing functions
 function startDrawing(e) {
   drawing = true;
   draw(e);
@@ -26,7 +31,7 @@ function draw(e) {
   if (!drawing) return;
 
   const x = e.clientX;
-  const y = e.clientY - 50;
+  const y = e.clientY - 50; // adjust for toolbar height
 
   ctx.lineWidth = thickness;
   ctx.lineCap = "round";
@@ -37,6 +42,7 @@ function draw(e) {
   ctx.beginPath();
   ctx.moveTo(x, y);
 
+  // Send drawing data to WebSocket
   socket.send(JSON.stringify({
     type: "draw",
     x,
@@ -46,19 +52,23 @@ function draw(e) {
   }));
 }
 
+// Event listeners for drawing
 canvas.addEventListener("mousedown", startDrawing);
 canvas.addEventListener("mouseup", stopDrawing);
 canvas.addEventListener("mouseout", stopDrawing);
 canvas.addEventListener("mousemove", draw);
 
+// Color picker
 document.getElementById("colorPicker").addEventListener("change", (e) => {
   color = e.target.value;
 });
 
+// Brush thickness
 document.getElementById("thickness").addEventListener("input", (e) => {
   thickness = e.target.value;
 });
 
+// Tool buttons
 document.getElementById("pen").addEventListener("click", () => {
   currentTool = 'pen';
 });
@@ -72,6 +82,7 @@ document.getElementById("clear").addEventListener("click", () => {
   socket.send(JSON.stringify({ type: "clear" }));
 });
 
+// WebSocket message handling
 socket.onmessage = (message) => {
   const data = JSON.parse(message.data);
 
